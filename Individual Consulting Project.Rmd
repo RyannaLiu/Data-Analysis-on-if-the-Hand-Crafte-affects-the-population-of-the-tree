@@ -1,0 +1,189 @@
+---
+title: "4893report"
+author: "Yunhan Liu"
+date: "2/25/2022"
+output: pdf_document
+---
+# 1.
+```{r}
+data=read.csv('d.csv')
+head(data)
+```
+```{r}
+table(data[6:8])
+```
+
+
+
+```{r}
+mod1=lm(BA_pertree_m2.ha.1~VT*MP*Harvested, data=data)
+par(mfrow=c(1,2))
+plot(mod1,which=c(1,2))
+```
+```{r}
+library(MASS)
+boxcox(mod1, lambda=seq(0,0.4,0.05))
+```
+$\lambda=0.25$
+
+```{r}
+mod1.trans=lm(BA_pertree_m2.ha.1^0.25~ VT*MP*Harvested, data=data)
+par(mfrow=c(1,2))
+plot(mod1.trans,which=c(1,2))
+```
+```{r}
+library(car)
+Anova(mod1.trans,type=2)
+```
+```{r}
+library(cfcdae)
+summary(mod1.trans)
+```
+### The effects of harvested and unharvested plots depend on the types of tree.
+
+```{r}
+interaction.plot(data$VT, data$Harvested, data$BA_pertree_m2.ha.1^0.25)
+```
+### Interaction plot: when the tree is nuku, then its dbh is negtively affected by harvested plots. also, keelenche.
+
+
+# 2.
+```{r}
+stem=read.csv('stem.csv')
+stem$VT=as.factor(stem$VT)
+stem$MP=as.factor(stem$MP)
+stem$Harvested=as.factor(stem$Harvested)
+head(stem)
+```
+```{r}
+mod3=lm(stem~VT*MP*Harvested, data=stem)
+par(mfrow=c(1,2))
+plot(mod3,which=c(1,2))
+```
+```{r}
+boxcox(mod3)
+```
+```{r}
+mod3.trans=lm(stem^-0.5~VT*MP*Harvested, data=stem)
+par(mfrow=c(1,2))
+plot(mod3.trans,which=c(1,2))
+```
+```{r}
+Anova(mod3.trans,type=2)
+```
+```{r}
+summary(mod3.trans)
+```
+
+
+# 4.
+
+```{r}
+sap=read.csv('sap_correct.csv')
+sap$Harvested=as.factor(sap$Harvested)
+sap$VT=as.factor(sap$VT)
+sap$MP=as.factor(sap$MP)
+head(sap)
+```
+```{r}
+mod4=lm(stem~VT*MP*Harvested, data=sap)
+par(mfrow=c(1,2))
+plot(mod4,which=c(1,2))
+```
+
+```{r}
+boxcox(mod4)
+```
+```{r}
+mod4.trans=lm(log(stem)~VT*MP*Harvested, data=sap)
+par(mfrow=c(1,2))
+plot(mod4.trans,which=c(1,2))
+```
+
+```{r}
+Anova(mod4.trans,type=2)
+```
+```{r}
+summary(mod4.trans)
+```
+
+```{r}
+adult=read.csv('adult_correct.csv')
+adult$Harvested=as.factor(adult$Harvested)
+adult$VT=as.factor(adult$VT)
+adult$MP=as.factor(adult$MP)
+head(adult)
+```
+```{r}
+mod5=lm(stem_dens~VT*MP*Harvested, data=adult)
+par(mfrow=c(1,2))
+plot(mod5,which=c(1,2))
+```
+```{r}
+boxcox(mod5)
+```
+
+```{r}
+mod5.trans=lm(log(stem_dens)~VT*MP*Harvested, data=adult)
+par(mfrow=c(1,2))
+plot(mod5.trans,which=c(1,2))
+```
+
+```{r}
+Anova(mod5.trans,type=2)
+```
+
+```{r}
+summary(mod5.trans)
+```
+
+# 5.
+
+
+```{r}
+mod6=lm(sum_ba~VT*MP*Harvested, data=sap)
+par(mfrow=c(1,2))
+plot(mod6,which=c(1,2))
+```
+
+```{r}
+boxcox(mod6)
+```
+
+```{r}
+mod6.trans=lm(log(sum_ba)~VT*MP*Harvested, data=sap)
+par(mfrow=c(1,2))
+plot(mod6.trans,which=c(1,2))
+```
+
+```{r}
+Anova(mod6.trans,type=2)
+```
+```{r}
+summary(mod6.trans)
+```
+
+```{r}
+mod7=lm(sum_ba~VT*MP*Harvested, data=adult)
+par(mfrow=c(1,2))
+plot(mod7,which=c(1,2))
+```
+
+```{r}
+boxcox(mod7)
+```
+```{r}
+mod7.trans=lm(log(sum_ba)~VT*MP*Harvested, data=adult)
+par(mfrow=c(1,2))
+plot(mod7.trans,which=c(1,2))
+```
+
+```{r}
+Anova(mod7.trans,type=2)
+```
+```{r}
+summary(mod7.trans)
+```
+
+
+
